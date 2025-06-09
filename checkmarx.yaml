@@ -1,0 +1,20 @@
+checkmarx_scan:
+  stage: security
+  image: alpine:latest
+  before_script:
+    - apk add --no-cache curl unzip
+  script:
+    - echo "🔍 Baixando e executando Checkmarx CLI"
+    - curl -L -o cxcli.zip https://path.to/checkmarx-cli.zip
+    - unzip cxcli.zip -d cxcli
+    - chmod +x cxcli/cx
+    - ./cxcli/cx scan \
+        --project-name "MeuProjeto" \
+        --src . \
+        --base-uri https://checkmarx.instance.com \
+        --tenant meu-tenant \
+        --client-id $CX_CLIENT_ID \
+        --client-secret $CX_CLIENT_SECRET \
+        --threshold medium
+  only:
+    - main
